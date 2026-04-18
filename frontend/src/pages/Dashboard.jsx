@@ -19,6 +19,8 @@ export default function Dashboard() {
       return;
     }
 
+
+
     fetchCauses();
   }, [token, navigate]);
 
@@ -27,7 +29,7 @@ export default function Dashboard() {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const res = await axios.get('http://localhost:5000/api/causes/me', config);
       const myCauses = res.data;
-      
+
       // Fetch donations for these causes
       const causesWithDonations = await Promise.all(
         myCauses.map(async (cause) => {
@@ -39,7 +41,7 @@ export default function Dashboard() {
           }
         })
       );
-      
+
       setCauses(causesWithDonations);
     } catch (error) {
       console.error('Error fetching causes:', error);
@@ -76,7 +78,7 @@ export default function Dashboard() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this cause? All associated donations will also be removed.')) return;
-    
+
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       await axios.delete(`http://localhost:5000/api/causes/${id}`, config);
@@ -106,7 +108,7 @@ export default function Dashboard() {
       const allDonations = await Promise.all(
         causes.map(c => axios.get(`http://localhost:5000/api/donations/${c._id}`))
       );
-      
+
       const flatDonations = [];
       allDonations.forEach((res, index) => {
         const causeDonations = res.data.donations.map(d => ({
@@ -117,10 +119,10 @@ export default function Dashboard() {
       });
 
       const csvHeader = "Donation ID,Donor Name,Amount,Status,Cause Title,Date\n";
-      const csvRows = flatDonations.map(d => 
+      const csvRows = flatDonations.map(d =>
         `${d._id},"${d.donorName}",${d.amount},${d.status || 'active'},"${d.causeTitle}",${new Date(d.createdAt).toISOString()}`
       );
-      
+
       const blob = new Blob([csvHeader + csvRows.join('\n')], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -172,7 +174,7 @@ export default function Dashboard() {
                   type="text"
                   required
                   value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Campaign Title"
                 />
@@ -183,7 +185,7 @@ export default function Dashboard() {
                   required
                   rows="4"
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
                   placeholder="Tell donors why this matters..."
                 />
@@ -196,7 +198,7 @@ export default function Dashboard() {
                     required
                     min="1"
                     value={formData.goalAmount}
-                    onChange={(e) => setFormData({...formData, goalAmount: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, goalAmount: e.target.value })}
                     className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     placeholder="10000"
                   />
@@ -208,7 +210,7 @@ export default function Dashboard() {
                   type="url"
                   required
                   value={formData.imageUrl}
-                  onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                   className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="https://example.com/image.jpg"
                 />
@@ -218,7 +220,7 @@ export default function Dashboard() {
                   </div>
                 )}
               </div>
-              
+
               <div className="flex gap-3 pt-2">
                 <button
                   type="submit"
@@ -248,7 +250,7 @@ export default function Dashboard() {
             <div className="p-6 border-b border-gray-100 bg-gray-50/50">
               <h2 className="text-xl font-bold text-gray-900">Your Active Campaigns</h2>
             </div>
-            
+
             <div className="p-0">
               {causes.length === 0 ? (
                 <div className="text-center py-16 px-6">
@@ -271,7 +273,7 @@ export default function Dashboard() {
                               {progress}% Funded
                             </div>
                           </div>
-                          
+
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-3 mb-1">
                               <h3 className="text-xl font-bold text-gray-900 truncate">{cause.title}</h3>
@@ -280,7 +282,7 @@ export default function Dashboard() {
                               </span>
                             </div>
                             <p className="text-gray-500 text-sm line-clamp-2 mb-4">{cause.description}</p>
-                            
+
                             <div className="flex items-center gap-6 mb-4">
                               <div>
                                 <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-0.5">Raised</p>
@@ -291,7 +293,7 @@ export default function Dashboard() {
                                 <p className="font-bold text-gray-700">${cause.goalAmount.toLocaleString()}</p>
                               </div>
                             </div>
-                            
+
                             <div className="flex gap-2">
                               <button
                                 onClick={() => handleEdit(cause)}
