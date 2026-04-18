@@ -37,7 +37,7 @@ export default function Dashboard() {
           }
         })
       );
-      
+
       setCauses(causesWithDonations);
     } catch (error) {
       console.error('Error fetching causes:', error);
