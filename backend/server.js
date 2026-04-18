@@ -13,6 +13,9 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.get('/', (req, res) => {
+  res.send('Charity Platform API is running...');
+});
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/causes', require('./routes/causes'));
 app.use('/api/donations', require('./routes/donations'));
