@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Plus, Trash2, Edit2, BarChart3, Download } from 'lucide-react';
+import axios from '../api';
+import { Plus, Trash2, Edit2, TrendingUp, DollarSign } from 'lucide-react';
 
 export default function Dashboard() {
   const [causes, setCauses] = useState([]);
@@ -18,21 +18,19 @@ export default function Dashboard() {
       navigate('/ngo/login');
       return;
     }
-
     fetchCauses();
   }, [token, navigate]);
 
   const fetchCauses = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get('http://localhost:5000/api/causes/me', config);
+      const res = await axios.get('/api/causes/me', config);
       const myCauses = res.data;
       
-      // Fetch donations for these causes
       const causesWithDonations = await Promise.all(
         myCauses.map(async (cause) => {
           try {
-            const donRes = await axios.get(`http://localhost:5000/api/donations/${cause._id}`);
+            const donRes = await axios.get(`/api/donations/${cause._id}`);
             return { ...cause, raisedAmount: donRes.data.raisedAmount };
           } catch (err) {
             return { ...cause, raisedAmount: 0 };
@@ -60,9 +58,9 @@ export default function Dashboard() {
       };
 
       if (isEditing) {
-        await axios.put(`http://localhost:5000/api/causes/${formData.id}`, payload, config);
+        await axios.put(`/api/causes/${formData.id}`, payload, config);
       } else {
-        await axios.post('http://localhost:5000/api/causes', payload, config);
+        await axios.post('/api/causes', payload, config);
       }
 
       setFormData({ title: '', description: '', goalAmount: '', imageUrl: '', id: null });
@@ -76,10 +74,9 @@ export default function Dashboard() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this cause? All associated donations will also be removed.')) return;
-    
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      await axios.delete(`http://localhost:5000/api/causes/${id}`, config);
+      await axios.delete(`/api/causes/${id}`, config);
       fetchCauses();
     } catch (error) {
       console.error('Error deleting cause:', error);
@@ -99,221 +96,142 @@ export default function Dashboard() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (loading) return <div className="text-center py-20 animate-pulse text-gray-500">Loading your dashboard...</div>;
-
-  const exportDonations = async () => {
-    try {
-      const allDonations = await Promise.all(
-        causes.map(c => axios.get(`http://localhost:5000/api/donations/${c._id}`))
-      );
-      
-      const flatDonations = [];
-      allDonations.forEach((res, index) => {
-        const causeDonations = res.data.donations.map(d => ({
-          ...d,
-          causeTitle: causes[index].title
-        }));
-        flatDonations.push(...causeDonations);
-      });
-
-      const csvHeader = "Donation ID,Donor Name,Amount,Status,Cause Title,Date\n";
-      const csvRows = flatDonations.map(d => 
-        `${d._id},"${d.donorName}",${d.amount},${d.status || 'active'},"${d.causeTitle}",${new Date(d.createdAt).toISOString()}`
-      );
-      
-      const blob = new Blob([csvHeader + csvRows.join('\n')], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.setAttribute('hidden', '');
-      a.setAttribute('href', url);
-      a.setAttribute('download', 'my_donations.csv');
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } catch (err) {
-      alert('Failed to export donations');
-    }
-  };
+  if (loading) return <div className="flex h-full items-center justify-center animate-pulse text-gray-500">Loading your dashboard...</div>;
 
   const totalRaisedOverall = causes.reduce((sum, cause) => sum + (cause.raisedAmount || 0), 0);
+  const totalGoalOverall = causes.reduce((sum, cause) => sum + (cause.goalAmount || 0), 0);
 
   return (
-    <div className="max-w-6xl mx-auto animate-in fade-in duration-500">
-      <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div className="animate-in fade-in duration-500">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900">NGO Dashboard</h1>
-          <p className="text-gray-500">Welcome back, {user?.name}. Here's an overview of your campaigns.</p>
+          <h1 className="text-4xl font-heading tracking-wider mb-1 uppercase">NGO DASHBOARD</h1>
+          <p className="text-gray-400 text-sm">Overview for {user?.name}</p>
         </div>
-        <div className="bg-white px-6 py-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
-          <div className="p-3 bg-green-100 text-green-600 rounded-xl">
-            <BarChart3 className="h-6 w-6" />
+        <div className="flex gap-4">
+          <div className="bg-[#1c1c1c] px-4 py-2 rounded-full border border-[#2a2a2a] text-sm flex items-center gap-2">
+            <span className="text-gray-400">Total Causes:</span>
+            <span className="font-bold">{causes.length}</span>
           </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">Total Funds Raised</p>
-            <p className="text-2xl font-bold text-gray-900">${totalRaisedOverall.toLocaleString()}</p>
-          </div>
-          <button onClick={exportDonations} className="ml-4 flex items-center gap-2 bg-gray-100 text-gray-700 px-3 py-2 rounded-lg font-bold hover:bg-gray-200 transition-colors">
-            <Download className="h-4 w-4" /> Export
-          </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-1">
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 sticky top-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              {isEditing ? <Edit2 className="h-5 w-5 text-indigo-600" /> : <Plus className="h-5 w-5 text-indigo-600" />}
-              {isEditing ? 'Edit Cause' : 'Create New Cause'}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">Title</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
-                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  placeholder="Campaign Title"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">Description</label>
-                <textarea
-                  required
-                  rows="4"
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-                  placeholder="Tell donors why this matters..."
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
-                  <label className="block text-sm font-bold text-gray-700 mb-1">Goal Amount ($)</label>
-                  <input
-                    type="number"
-                    required
-                    min="1"
-                    value={formData.goalAmount}
-                    onChange={(e) => setFormData({...formData, goalAmount: e.target.value})}
-                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    placeholder="10000"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">Image URL</label>
-                <input
-                  type="url"
-                  required
-                  value={formData.imageUrl}
-                  onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
-                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  placeholder="https://example.com/image.jpg"
-                />
-                {formData.imageUrl && (
-                  <div className="mt-3 h-24 rounded-lg overflow-hidden border border-gray-200">
-                    <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://via.placeholder.com/400x200?text=Invalid+Image+URL'; }} />
-                  </div>
-                )}
-              </div>
-              
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="submit"
-                  className="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-sm"
-                >
-                  {isEditing ? 'Update Cause' : 'Publish Cause'}
-                </button>
-                {isEditing && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsEditing(false);
-                      setFormData({ title: '', description: '', goalAmount: '', imageUrl: '', id: null });
-                    }}
-                    className="px-4 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                )}
-              </div>
-            </form>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="bg-[#1c1c1c] rounded-3xl p-6 border border-[#2a2a2a] flex flex-col justify-between shadow-2xl relative overflow-hidden">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#a4e857] opacity-10 rounded-full blur-2xl"></div>
+          <div>
+            <div className="flex justify-between items-start mb-6">
+              <h2 className="text-xl font-heading tracking-widest text-gray-400">TOTAL RAISED</h2>
+              <TrendingUp className="h-5 w-5 text-[#a4e857]" />
+            </div>
+            <div className="flex items-end gap-3">
+              <span className="text-5xl font-bold">₹{totalRaisedOverall.toLocaleString()}</span>
+            </div>
+          </div>
+          <div className="mt-8">
+             <div className="w-full h-1 bg-[#2a2a2a] rounded-full overflow-hidden">
+                <div className="h-full bg-[#a4e857]" style={{ width: `${Math.min(100, (totalRaisedOverall/totalGoalOverall)*100 || 0)}%` }}></div>
+             </div>
           </div>
         </div>
 
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-6 border-b border-gray-100 bg-gray-50/50">
-              <h2 className="text-xl font-bold text-gray-900">Your Active Campaigns</h2>
+        <div className="bg-[#1c1c1c] rounded-3xl p-6 border border-[#2a2a2a] flex flex-col justify-between shadow-2xl relative overflow-hidden">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#ff9f31] opacity-10 rounded-full blur-2xl"></div>
+          <div>
+            <div className="flex justify-between items-start mb-6">
+              <h2 className="text-xl font-heading tracking-widest text-gray-400">TOTAL GOAL</h2>
+              <DollarSign className="h-5 w-5 text-[#ff9f31]" />
             </div>
-            
-            <div className="p-0">
-              {causes.length === 0 ? (
-                <div className="text-center py-16 px-6">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Plus className="h-8 w-8 text-gray-400" />
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">No causes yet</h3>
-                  <p className="text-gray-500">Create your first charitable campaign using the form.</p>
-                </div>
-              ) : (
-                <div className="divide-y divide-gray-100">
-                  {causes.map((cause) => {
-                    const progress = Math.min(100, Math.round((cause.raisedAmount / cause.goalAmount) * 100)) || 0;
-                    return (
-                      <div key={cause._id} className="p-6 hover:bg-gray-50 transition-colors">
-                        <div className="flex flex-col sm:flex-row gap-6">
-                          <div className="w-full sm:w-48 h-32 flex-shrink-0 rounded-xl overflow-hidden relative">
-                            <img src={cause.imageUrl} alt={cause.title} className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb0'; }} />
-                            <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-indigo-700">
-                              {progress}% Funded
-                            </div>
-                          </div>
-                          
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-3 mb-1">
-                              <h3 className="text-xl font-bold text-gray-900 truncate">{cause.title}</h3>
-                              <span className={`px-2 py-0.5 rounded text-xs font-bold ${cause.status === 'approved' ? 'bg-green-100 text-green-700' : cause.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
-                                {cause.status?.toUpperCase() || 'PENDING'}
-                              </span>
-                            </div>
-                            <p className="text-gray-500 text-sm line-clamp-2 mb-4">{cause.description}</p>
-                            
-                            <div className="flex items-center gap-6 mb-4">
-                              <div>
-                                <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-0.5">Raised</p>
-                                <p className="font-bold text-indigo-600">${(cause.raisedAmount || 0).toLocaleString()}</p>
-                              </div>
-                              <div>
-                                <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-0.5">Goal</p>
-                                <p className="font-bold text-gray-700">${cause.goalAmount.toLocaleString()}</p>
-                              </div>
-                            </div>
-                            
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => handleEdit(cause)}
-                                className="flex items-center gap-1.5 px-4 py-2 bg-blue-50 text-blue-700 text-sm font-bold rounded-lg hover:bg-blue-100 transition-colors"
-                              >
-                                <Edit2 className="h-4 w-4" /> Edit
-                              </button>
-                              <button
-                                onClick={() => handleDelete(cause._id)}
-                                className="flex items-center gap-1.5 px-4 py-2 bg-red-50 text-red-600 text-sm font-bold rounded-lg hover:bg-red-100 transition-colors"
-                              >
-                                <Trash2 className="h-4 w-4" /> Delete
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+            <div className="flex items-end gap-3">
+              <span className="text-5xl font-bold text-white">₹{totalGoalOverall.toLocaleString()}</span>
+            </div>
+          </div>
+          <div className="mt-8 flex items-center gap-4 text-sm text-gray-400">
+             <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-[#ff9f31]"></div> TARGET</div>
+          </div>
+        </div>
+
+        <div className="bg-[#1c1c1c] rounded-3xl p-6 border border-[#2a2a2a] shadow-2xl row-span-2">
+          <h2 className="text-xl font-heading tracking-widest text-gray-400 mb-6 uppercase">
+            {isEditing ? 'EDIT CAUSE' : 'NEW CAUSE'}
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Title</label>
+              <input type="text" required value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="w-full px-4 py-3 bg-[#111111] border border-[#2a2a2a] rounded-xl focus:outline-none focus:border-[#a4e857] text-white" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Description</label>
+              <textarea required rows="3" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="w-full px-4 py-3 bg-[#111111] border border-[#2a2a2a] rounded-xl focus:outline-none focus:border-[#a4e857] text-white resize-none" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Goal Amount (₹)</label>
+              <input type="number" required min="1" value={formData.goalAmount} onChange={(e) => setFormData({...formData, goalAmount: e.target.value})} className="w-full px-4 py-3 bg-[#111111] border border-[#2a2a2a] rounded-xl focus:outline-none focus:border-[#a4e857] text-white" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Image URL</label>
+              <input type="url" required value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="w-full px-4 py-3 bg-[#111111] border border-[#2a2a2a] rounded-xl focus:outline-none focus:border-[#a4e857] text-white" />
+            </div>
+            <div className="pt-4 flex gap-3">
+              <button type="submit" className="flex-1 bg-[#a4e857] text-[#111111] py-3 rounded-xl font-bold hover:bg-[#90d646] transition-colors uppercase tracking-wide text-sm">
+                {isEditing ? 'UPDATE' : 'PUBLISH'}
+              </button>
+              {isEditing && (
+                <button type="button" onClick={() => { setIsEditing(false); setFormData({ title: '', description: '', goalAmount: '', imageUrl: '', id: null }); }} className="px-4 bg-[#2a2a2a] text-white font-bold rounded-xl hover:bg-[#333] transition-colors uppercase tracking-wide text-sm">
+                  Cancel
+                </button>
               )}
             </div>
+          </form>
+        </div>
+
+        <div className="col-span-1 lg:col-span-2 bg-[#1c1c1c] rounded-3xl p-6 border border-[#2a2a2a] shadow-2xl h-full flex flex-col">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-heading tracking-widest text-gray-400 uppercase">ACTIVE CAMPAIGNS</h2>
+          </div>
+          <div className="flex-1 overflow-y-auto pr-2 space-y-4">
+            {causes.length === 0 ? (
+              <div className="text-center py-10 text-gray-500">No campaigns yet.</div>
+            ) : (
+              causes.map((cause) => {
+                const progress = Math.min(100, Math.round((cause.raisedAmount / cause.goalAmount) * 100)) || 0;
+                return (
+                  <div key={cause._id} className="bg-[#111111] border border-[#2a2a2a] rounded-2xl p-4 flex gap-6 hover:border-[#444] transition-colors">
+                    <div className="w-32 h-24 rounded-xl overflow-hidden bg-gray-800 flex-shrink-0">
+                      <img src={cause.imageUrl} alt={cause.title} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-bold text-lg leading-tight mb-1">{cause.title}</h3>
+                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${cause.status === 'approved' ? 'bg-[#a4e857]/20 text-[#a4e857]' : 'bg-[#ff9f31]/20 text-[#ff9f31]'}`}>
+                            {cause.status || 'PENDING'}
+                          </span>
+                        </div>
+                        <div className="flex gap-2">
+                          <button onClick={() => handleEdit(cause)} className="w-8 h-8 rounded-full bg-[#2a2a2a] hover:bg-[#a4e857] hover:text-[#111111] flex items-center justify-center transition-colors text-gray-400">
+                            <Edit2 className="h-3 w-3" />
+                          </button>
+                          <button onClick={() => handleDelete(cause._id)} className="w-8 h-8 rounded-full bg-[#2a2a2a] hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors text-gray-400">
+                            <Trash2 className="h-3 w-3" />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 mt-4">
+                        <div className="flex-1">
+                          <div className="w-full h-1.5 bg-[#2a2a2a] rounded-full overflow-hidden">
+                            <div className="h-full bg-[#a4e857]" style={{ width: `${progress}%` }}></div>
+                          </div>
+                        </div>
+                        <div className="text-xs font-bold text-gray-400">
+                          <span className="text-[#a4e857]">₹{cause.raisedAmount?.toLocaleString() || 0}</span> / ₹{cause.goalAmount?.toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       </div>

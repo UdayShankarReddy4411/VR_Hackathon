@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../api';
 import { Search } from 'lucide-react';
 import CauseCard from '../components/CauseCard';
 
@@ -11,16 +11,12 @@ export default function Home() {
   useEffect(() => {
     const fetchCauses = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/causes');
+        const response = await axios.get('/api/causes');
         
-        // We also need to fetch raised amount for each cause to display on cards
-        // For efficiency, usually we'd aggregate in backend. For this 6-hour build, 
-        // we'll fetch donations concurrently or modify backend. 
-        // Let's assume we do concurrent fetches for now
         const causesWithDonations = await Promise.all(
           response.data.map(async (cause) => {
             try {
-              const donRes = await axios.get(`http://localhost:5000/api/donations/${cause._id}`);
+              const donRes = await axios.get(`/api/donations/${cause._id}`);
               return { ...cause, raisedAmount: donRes.data.raisedAmount };
             } catch (err) {
               return { ...cause, raisedAmount: 0 };
@@ -44,55 +40,65 @@ export default function Home() {
   );
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="text-center py-12 px-4 bg-gradient-to-br from-indigo-50 to-white rounded-3xl border border-indigo-100 shadow-sm">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-indigo-900 mb-4 tracking-tight">
-          Make a Difference Today
-        </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-          Browse through our verified charitable causes and support the ones that matter to you. Every donation counts.
-        </p>
+    <div className="animate-in fade-in duration-500">
+      <div className="bg-[#1c1c1c] rounded-[40px] border border-[#2a2a2a] p-12 mb-12 relative overflow-hidden shadow-2xl">
+        <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#a4e857] opacity-10 rounded-full blur-3xl"></div>
+        <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-[#ff9f31] opacity-10 rounded-full blur-3xl"></div>
         
-        <div className="max-w-md mx-auto relative group">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
+        <div className="relative z-10 max-w-3xl">
+          <h1 className="text-5xl md:text-7xl font-heading text-white mb-6 uppercase tracking-wider leading-none">
+            Empower <span className="text-[#a4e857]">Change.</span><br/>
+            Fund <span className="text-[#ff9f31]">Hope.</span>
+          </h1>
+          <p className="text-xl text-gray-400 mb-10 max-w-xl">
+            Discover verified charitable campaigns. Your contribution directly impacts communities worldwide.
+          </p>
+          
+          <div className="max-w-md relative group">
+            <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gray-500 group-focus-within:text-[#a4e857] transition-colors" />
+            </div>
+            <input
+              type="text"
+              className="block w-full pl-14 pr-6 py-4 bg-[#111111] border border-[#2a2a2a] rounded-full leading-5 text-white placeholder-gray-500 focus:outline-none focus:border-[#a4e857] focus:ring-1 focus:ring-[#a4e857] transition-all"
+              placeholder="Search campaigns..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-          <input
-            type="text"
-            className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all shadow-sm"
-            placeholder="Search causes..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
         </div>
       </div>
 
-      {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} className="bg-white h-96 rounded-2xl animate-pulse"></div>
-          ))}
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Explore Causes</h2>
-            <span className="text-gray-500 text-sm font-medium">{filteredCauses.length} found</span>
+      <div>
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-heading tracking-widest text-gray-300 uppercase">Explore Campaigns</h2>
+          <div className="bg-[#1c1c1c] border border-[#2a2a2a] px-4 py-1.5 rounded-full text-sm font-bold text-[#a4e857]">
+            {filteredCauses.length} Results
           </div>
-          
-          {filteredCauses.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredCauses.map((cause) => (
-                <CauseCard key={cause._id} cause={cause} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
-              <p className="text-gray-500 text-lg">No causes found matching your search.</p>
-            </div>
-          )}
-        </>
-      )}
+        </div>
+        
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="bg-[#1c1c1c] h-96 rounded-3xl animate-pulse border border-[#2a2a2a]"></div>
+            ))}
+          </div>
+        ) : (
+          <div className="pb-8">
+            {filteredCauses.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredCauses.map((cause) => (
+                  <CauseCard key={cause._id} cause={cause} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20 bg-[#1c1c1c] rounded-3xl border border-[#2a2a2a]">
+                <p className="text-gray-500 text-lg">No campaigns found matching your search.</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

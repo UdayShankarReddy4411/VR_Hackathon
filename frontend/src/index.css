@@ -1,7 +1,43 @@
 @import "tailwindcss";
 
+:root {
+  --bg-dark: #111111;
+  --card-dark: #1a1a1a;
+  --border-dark: #2a2a2a;
+  --accent-green: #a4e857;
+  --accent-orange: #ff9f31;
+}
+
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #f3f4f6;
-  color: #1f2937;
+  background-color: var(--bg-dark);
+  color: #ffffff;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#root {
+  width: 100%;
+  background-color: var(--bg-dark);
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.05em;
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark); 
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-dark); 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #444; 
 }
