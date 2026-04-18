@@ -41,7 +41,7 @@ export default function LoginRegister() {
   return (
     <div className="max-w-md mx-auto mt-10 animate-in slide-in-from-bottom-8 duration-500">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center p-3 bg-indigo-100 text-indigo-600 rounded-2xl mb-4">
+        <div className="inline-flex items-center justify-center p-3 bg-orange-100 text-[#f59e0b] rounded-2xl mb-4">
           <Building className="h-8 w-8" />
         </div>
         <h1 className="text-3xl font-extrabold text-gray-900">
@@ -72,7 +72,7 @@ export default function LoginRegister() {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#f59e0b] focus:outline-none transition-colors"
                   placeholder="Hope Foundation"
                 />
               </div>
@@ -90,7 +90,7 @@ export default function LoginRegister() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
-                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-colors"
+                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#f59e0b] focus:outline-none transition-colors"
                 placeholder="contact@organization.org"
               />
             </div>
@@ -107,7 +107,7 @@ export default function LoginRegister() {
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
-                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-colors"
+                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#f59e0b] focus:outline-none transition-colors"
                 placeholder="••••••••"
               />
             </div>
@@ -116,7 +116,7 @@ export default function LoginRegister() {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 shadow-md shadow-indigo-200 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 mt-2"
+            className="w-full bg-[#f59e0b] text-white py-3 rounded-xl font-bold hover:bg-[#d97706] shadow-md shadow-orange-200 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0 mt-2"
           >
             {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
           </button>
@@ -127,7 +127,7 @@ export default function LoginRegister() {
             {isLogin ? "Don't have an NGO account? " : "Already have an account? "}
             <button 
               onClick={() => { setIsLogin(!isLogin); setError(''); }}
-              className="text-indigo-600 font-bold hover:underline focus:outline-none"
+              className="text-[#f59e0b] font-bold hover:underline focus:outline-none"
             >
               {isLogin ? 'Register here' : 'Log in here'}
             </button>

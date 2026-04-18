@@ -24,12 +24,12 @@ export default function CauseCard({ cause }) {
         
         <div className="space-y-2 mb-5">
           <div className="flex justify-between text-sm">
-            <span className="font-semibold text-indigo-600">${raised.toLocaleString()} raised</span>
+            <span className="font-semibold text-[#f59e0b]">${raised.toLocaleString()} raised</span>
             <span className="text-gray-500">of ${cause.goalAmount.toLocaleString()}</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div 
-              className="bg-indigo-600 h-2 rounded-full transition-all duration-1000" 
+              className="bg-[#f59e0b] h-2 rounded-full transition-all duration-1000" 
               style={{ width: `${progress}%` }}
             ></div>
           </div>
@@ -44,7 +44,7 @@ export default function CauseCard({ cause }) {
           </Link>
           <Link 
             to={`/donate/${cause._id}`}
-            className="flex-1 text-center bg-indigo-600 text-white py-2.5 rounded-xl font-medium hover:bg-indigo-700 shadow-sm shadow-indigo-200 transition-all hover:-translate-y-0.5"
+            className="flex-1 text-center bg-[#f59e0b] text-white py-2.5 rounded-xl font-medium hover:bg-[#d97706] shadow-sm shadow-orange-200 transition-all hover:-translate-y-0.5"
           >
             Donate
           </Link>

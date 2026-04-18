@@ -164,7 +164,7 @@ export default function Dashboard() {
         <div className="lg:col-span-1">
           <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 sticky top-6">
             <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              {isEditing ? <Edit2 className="h-5 w-5 text-indigo-600" /> : <Plus className="h-5 w-5 text-indigo-600" />}
+              {isEditing ? <Edit2 className="h-5 w-5 text-[#f59e0b]" /> : <Plus className="h-5 w-5 text-[#f59e0b]" />}
               {isEditing ? 'Edit Cause' : 'Create New Cause'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -175,7 +175,7 @@ export default function Dashboard() {
                   required
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#f59e0b]"
                   placeholder="Campaign Title"
                 />
               </div>
@@ -186,7 +186,7 @@ export default function Dashboard() {
                   rows="4"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#f59e0b] resize-none"
                   placeholder="Tell donors why this matters..."
                 />
               </div>
@@ -199,7 +199,7 @@ export default function Dashboard() {
                     min="1"
                     value={formData.goalAmount}
                     onChange={(e) => setFormData({ ...formData, goalAmount: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#f59e0b]"
                     placeholder="10000"
                   />
                 </div>
@@ -211,7 +211,7 @@ export default function Dashboard() {
                   required
                   value={formData.imageUrl}
                   onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#f59e0b]"
                   placeholder="https://example.com/image.jpg"
                 />
                 {formData.imageUrl && (
@@ -224,7 +224,7 @@ export default function Dashboard() {
               <div className="flex gap-3 pt-2">
                 <button
                   type="submit"
-                  className="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-sm"
+                  className="flex-1 bg-[#f59e0b] text-white py-3 rounded-xl font-bold hover:bg-[#d97706] transition-colors shadow-sm"
                 >
                   {isEditing ? 'Update Cause' : 'Publish Cause'}
                 </button>
@@ -269,7 +269,7 @@ export default function Dashboard() {
                         <div className="flex flex-col sm:flex-row gap-6">
                           <div className="w-full sm:w-48 h-32 flex-shrink-0 rounded-xl overflow-hidden relative">
                             <img src={cause.imageUrl} alt={cause.title} className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb0'; }} />
-                            <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-indigo-700">
+                            <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-[#d97706]">
                               {progress}% Funded
                             </div>
                           </div>
@@ -286,7 +286,7 @@ export default function Dashboard() {
                             <div className="flex items-center gap-6 mb-4">
                               <div>
                                 <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-0.5">Raised</p>
-                                <p className="font-bold text-indigo-600">${(cause.raisedAmount || 0).toLocaleString()}</p>
+                                <p className="font-bold text-[#f59e0b]">${(cause.raisedAmount || 0).toLocaleString()}</p>
                               </div>
                               <div>
                                 <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-0.5">Goal</p>

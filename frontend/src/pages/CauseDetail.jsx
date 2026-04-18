@@ -63,7 +63,7 @@ export default function CauseDetail() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
           <div className="absolute bottom-6 left-6 right-6 text-white">
             <h1 className="text-4xl font-extrabold mb-2 tracking-tight">{cause.title}</h1>
-            <p className="text-indigo-200 flex items-center gap-2 text-sm font-medium">
+            <p className="text-orange-200 flex items-center gap-2 text-sm font-medium">
               <UserIcon className="h-4 w-4" /> By {cause.createdBy?.name || 'NGO'}
             </p>
           </div>
@@ -87,7 +87,7 @@ export default function CauseDetail() {
                   {donations.slice(0, 5).map(don => (
                     <div key={don._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
                       <div className="flex items-center gap-3">
-                        <div className="bg-indigo-100 text-indigo-600 p-2 rounded-full">
+                        <div className="bg-orange-100 text-[#f59e0b] p-2 rounded-full">
                           <Heart className="h-5 w-5" />
                         </div>
                         <div>
@@ -98,7 +98,7 @@ export default function CauseDetail() {
                           </p>
                         </div>
                       </div>
-                      <span className="font-bold text-indigo-600 text-lg">${don.amount}</span>
+                      <span className="font-bold text-[#f59e0b] text-lg">${don.amount}</span>
                     </div>
                   ))}
                 </div>
@@ -109,28 +109,28 @@ export default function CauseDetail() {
           </div>
 
           <div className="md:col-span-1">
-            <div className="sticky top-6 bg-white border border-gray-100 rounded-2xl p-6 shadow-xl shadow-indigo-100/20">
+            <div className="sticky top-6 bg-white border border-gray-100 rounded-2xl p-6 shadow-xl shadow-orange-100/20">
               <div className="mb-6">
                 <div className="flex items-end gap-2 mb-2">
-                  <span className="text-4xl font-extrabold text-indigo-600">${raised.toLocaleString()}</span>
+                  <span className="text-4xl font-extrabold text-[#f59e0b]">${raised.toLocaleString()}</span>
                   <span className="text-gray-500 font-medium mb-1">raised</span>
                 </div>
                 <p className="text-gray-500 text-sm mb-4">of ${cause.goalAmount.toLocaleString()} goal</p>
                 
                 <div className="w-full bg-gray-100 rounded-full h-3 mb-2 overflow-hidden">
                   <div 
-                    className="bg-gradient-to-r from-indigo-500 to-indigo-600 h-3 rounded-full transition-all duration-1000 ease-out relative" 
+                    className="bg-gradient-to-r from-[#f59e0b] to-[#d97706] h-3 rounded-full transition-all duration-1000 ease-out relative" 
                     style={{ width: `${progress}%` }}
                   >
                     <div className="absolute inset-0 bg-white/20 w-full animate-pulse"></div>
                   </div>
                 </div>
-                <p className="text-right text-xs font-bold text-indigo-600">{progress}%</p>
+                <p className="text-right text-xs font-bold text-[#f59e0b]">{progress}%</p>
               </div>
 
               <Link 
                 to={`/donate/${cause._id}`}
-                className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-indigo-700 shadow-md shadow-indigo-200 transition-all hover:-translate-y-1"
+                className="w-full flex items-center justify-center gap-2 bg-[#f59e0b] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#d97706] shadow-md shadow-orange-200 transition-all hover:-translate-y-1"
               >
                 <Heart className="h-5 w-5 fill-current" />
                 Donate Now

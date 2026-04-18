@@ -67,7 +67,7 @@ export default function Donate() {
     <div className="max-w-xl mx-auto">
       <button 
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-500 hover:text-indigo-600 transition-colors mb-6 font-medium"
+        className="flex items-center gap-2 text-gray-500 hover:text-[#f59e0b] transition-colors mb-6 font-medium"
       >
         <ArrowLeft className="h-4 w-4" /> Back
       </button>
@@ -89,8 +89,8 @@ export default function Donate() {
                   onClick={() => setAmount(preset)}
                   className={`py-3 rounded-xl border-2 font-bold transition-all ${
                     Number(amount) === preset 
-                      ? 'border-indigo-600 bg-indigo-50 text-indigo-700' 
-                      : 'border-gray-100 text-gray-600 hover:border-indigo-200 hover:bg-gray-50'
+                      ? 'border-[#f59e0b] bg-[#fffbeb] text-[#d97706]' 
+                      : 'border-gray-100 text-gray-600 hover:border-orange-200 hover:bg-gray-50'
                   }`}
                 >
                   ${preset}
@@ -106,7 +106,7 @@ export default function Donate() {
               min="1"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-lg font-medium"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#f59e0b] focus:border-[#f59e0b] transition-colors text-lg font-medium"
               placeholder="0.00"
               required
             />
@@ -118,7 +118,7 @@ export default function Donate() {
               type="text"
               value={donorName}
               onChange={(e) => setDonorName(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#f59e0b] focus:border-[#f59e0b] transition-colors"
               placeholder="Leave blank to remain anonymous"
             />
           </div>
@@ -130,7 +130,7 @@ export default function Donate() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all disabled:opacity-50 disabled:hover:translate-y-0"
+            className="w-full bg-[#f59e0b] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#d97706] shadow-lg shadow-orange-200 transition-all disabled:opacity-50 disabled:hover:translate-y-0"
           >
             {loading ? 'Processing...' : `Donate $${amount || '0'}`}
           </button>
