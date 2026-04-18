@@ -125,7 +125,7 @@ export default function Dashboard() {
               <TrendingUp className="h-5 w-5 text-[#a4e857]" />
             </div>
             <div className="flex items-end gap-3">
-              <span className="text-5xl font-bold">₹{totalRaisedOverall.toLocaleString()}</span>
+              <span className="text-4xl md:text-5xl font-bold">₹{totalRaisedOverall.toLocaleString()}</span>
             </div>
           </div>
           <div className="mt-8">
@@ -143,7 +143,7 @@ export default function Dashboard() {
               <DollarSign className="h-5 w-5 text-[#ff9f31]" />
             </div>
             <div className="flex items-end gap-3">
-              <span className="text-5xl font-bold text-white">₹{totalGoalOverall.toLocaleString()}</span>
+              <span className="text-4xl md:text-5xl font-bold text-white">₹{totalGoalOverall.toLocaleString()}</span>
             </div>
           </div>
           <div className="mt-8 flex items-center gap-4 text-sm text-gray-400">
@@ -196,8 +196,8 @@ export default function Dashboard() {
               causes.map((cause) => {
                 const progress = Math.min(100, Math.round((cause.raisedAmount / cause.goalAmount) * 100)) || 0;
                 return (
-                  <div key={cause._id} className="bg-[#111111] border border-[#2a2a2a] rounded-2xl p-4 flex gap-6 hover:border-[#444] transition-colors">
-                    <div className="w-32 h-24 rounded-xl overflow-hidden bg-gray-800 flex-shrink-0">
+                  <div key={cause._id} className="bg-[#111111] border border-[#2a2a2a] rounded-2xl p-4 flex flex-col sm:flex-row gap-4 sm:gap-6 hover:border-[#444] transition-colors">
+                    <div className="w-full sm:w-32 h-40 sm:h-24 rounded-xl overflow-hidden bg-gray-800 flex-shrink-0">
                       <img src={cause.imageUrl} alt={cause.title} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1 flex flex-col justify-between">
@@ -223,7 +223,7 @@ export default function Dashboard() {
                             <div className="h-full bg-[#a4e857]" style={{ width: `${progress}%` }}></div>
                           </div>
                         </div>
-                        <div className="text-xs font-bold text-gray-400">
+                        <div className="text-xs font-bold text-gray-400 whitespace-nowrap">
                           <span className="text-[#a4e857]">₹{cause.raisedAmount?.toLocaleString() || 0}</span> / ₹{cause.goalAmount?.toLocaleString()}
                         </div>
                       </div>

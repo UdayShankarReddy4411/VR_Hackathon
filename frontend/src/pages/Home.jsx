@@ -41,26 +41,26 @@ export default function Home() {
 
   return (
     <div className="animate-in fade-in duration-500">
-      <div className="bg-[#1c1c1c] rounded-[40px] border border-[#2a2a2a] p-12 mb-12 relative overflow-hidden shadow-2xl">
+      <div className="bg-[#1c1c1c] rounded-3xl md:rounded-[40px] border border-[#2a2a2a] p-6 md:p-12 mb-8 md:mb-12 relative overflow-hidden shadow-2xl">
         <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#a4e857] opacity-10 rounded-full blur-3xl"></div>
         <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-[#ff9f31] opacity-10 rounded-full blur-3xl"></div>
 
         <div className="relative z-10 max-w-3xl">
-          <h1 className="text-5xl md:text-7xl font-heading text-white mb-6 uppercase tracking-wider leading-none">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-heading text-white mb-4 md:mb-6 uppercase tracking-wider leading-none">
             Empower <span className="text-[#a4e857]">Change.</span><br />
             Fund <span className="text-[#ff9f31]">Hope.</span>
           </h1>
-          <p className="text-xl text-gray-400 mb-10 max-w-xl">
+          <p className="text-lg md:text-xl text-gray-400 mb-8 md:mb-10 max-w-xl">
             Discover verified charitable campaigns. Your contribution directly impacts communities worldwide.
           </p>
 
           <div className="max-w-md relative group">
-            <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+            <div className="absolute inset-y-0 left-0 pl-4 md:pl-6 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-500 group-focus-within:text-[#a4e857] transition-colors" />
             </div>
             <input
               type="text"
-              className="block w-full pl-14 pr-6 py-4 bg-[#111111] border border-[#2a2a2a] rounded-full leading-5 text-white placeholder-gray-500 focus:outline-none focus:border-[#a4e857] focus:ring-1 focus:ring-[#a4e857] transition-all"
+              className="block w-full pl-12 md:pl-14 pr-4 md:pr-6 py-3 md:py-4 bg-[#111111] border border-[#2a2a2a] rounded-full leading-5 text-white placeholder-gray-500 focus:outline-none focus:border-[#a4e857] focus:ring-1 focus:ring-[#a4e857] transition-all"
               placeholder="Search campaigns..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}

@@ -43,7 +43,7 @@ export default function LoginRegister() {
         <ArrowLeft className="h-4 w-4" /> Back to Home
       </Link>
 
-      <div className="bg-[#1c1c1c] p-10 rounded-[40px] shadow-2xl border border-[#2a2a2a] relative overflow-hidden">
+      <div className="bg-[#1c1c1c] p-6 md:p-10 rounded-3xl md:rounded-[40px] shadow-2xl border border-[#2a2a2a] relative overflow-hidden">
         <div className="absolute -top-20 -left-20 w-48 h-48 bg-[#a4e857] opacity-10 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-[#ff9f31] opacity-10 rounded-full blur-3xl"></div>
         

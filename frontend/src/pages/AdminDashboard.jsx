@@ -86,15 +86,15 @@ export default function AdminDashboard() {
         <p className="text-gray-400 text-sm">Manage NGOs, moderate content, and oversee the platform ledger.</p>
       </div>
 
-      <div className="flex gap-4 mb-6">
-        <button onClick={() => setActiveTab('users')} className={`px-6 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all ${activeTab === 'users' ? 'bg-[#a4e857] text-[#111111]' : 'bg-[#1c1c1c] text-gray-400 hover:bg-[#2a2a2a]'}`}>
-          <Users className="h-4 w-4" /> NGOs
+      <div className="flex gap-2 sm:gap-4 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+        <button onClick={() => setActiveTab('users')} className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 transition-all whitespace-nowrap ${activeTab === 'users' ? 'bg-[#a4e857] text-[#111111]' : 'bg-[#1c1c1c] text-gray-400 hover:bg-[#2a2a2a]'}`}>
+          <Users className="h-4 w-4 flex-shrink-0" /> NGOs
         </button>
-        <button onClick={() => setActiveTab('causes')} className={`px-6 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all ${activeTab === 'causes' ? 'bg-[#ff9f31] text-[#111111]' : 'bg-[#1c1c1c] text-gray-400 hover:bg-[#2a2a2a]'}`}>
-          <AlertTriangle className="h-4 w-4" /> Causes & Moderation
+        <button onClick={() => setActiveTab('causes')} className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 transition-all whitespace-nowrap ${activeTab === 'causes' ? 'bg-[#ff9f31] text-[#111111]' : 'bg-[#1c1c1c] text-gray-400 hover:bg-[#2a2a2a]'}`}>
+          <AlertTriangle className="h-4 w-4 flex-shrink-0" /> Causes & Moderation
         </button>
-        <button onClick={() => setActiveTab('donations')} className={`px-6 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all ${activeTab === 'donations' ? 'bg-white text-[#111111]' : 'bg-[#1c1c1c] text-gray-400 hover:bg-[#2a2a2a]'}`}>
-          <Database className="h-4 w-4" /> Donation Ledger
+        <button onClick={() => setActiveTab('donations')} className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 transition-all whitespace-nowrap ${activeTab === 'donations' ? 'bg-white text-[#111111]' : 'bg-[#1c1c1c] text-gray-400 hover:bg-[#2a2a2a]'}`}>
+          <Database className="h-4 w-4 flex-shrink-0" /> Donation Ledger
         </button>
       </div>
 
